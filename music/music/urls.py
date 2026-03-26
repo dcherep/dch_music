@@ -15,4 +15,5 @@ urlpatterns = [
     path('add_track/', views.add_track),
     path('edittrack/<int:id_track>', views.edit_track),
     path('deletetrack/<int:id_track>', views.deleteTrack),
+    path('artists/', views.artists),
 ]

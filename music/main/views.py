@@ -37,7 +37,13 @@ def deleteGenre(request, id_genre):
 
 def track(request):
     t=Track.objects.all()
-    return render(request, 'tracks.html', {'tracks': t})
+    a=Artist.objects.all()
+    artist =None
+    if request.method =="POST":
+        id_artist=request.POST.get('artist')
+        artist=Artist.objects.get(id=id_artist)
+        t=Track.objects.filter(artist=artist)
+    return render(request, 'tracks.html', {'tracks': t, 'artists':a, 'current_artist': artist})
 
 def add_track(request):
     if request.method=="POST":
@@ -68,6 +74,32 @@ def deleteTrack(request, id_track):
 def artists(request):
     a=Artist.objects.all()
     return render(request, 'artists.html', {'artists': a})
+
+def add_artist(request):
+    if request.method=="POST":
+        artists=ArtistForm(request.POST)
+        if artists.is_valid():
+            artists.save()
+        return redirect('/artists')
+    else:
+        artistform=ArtistForm()
+    return render(request, 'addArtist.html', {'form': artistform})
+
+def edit_artist(request,id_artist):
+    a=Artist.objects.get(id=id_artist)
+    if request.method=="POST":
+        artists=ArtistForm(request.POST,instance=a)
+        if artists.is_valid():
+            artists.save()
+        return redirect('/artists')
+    else:
+        artistform=ArtistForm(instance=a)
+    return render(request, 'updateArtist.html', {'form': artistform})
+
+def deleteArtist(request, id_artist):
+    artists=Artist.objects.get(id=id_artist)
+    artists.delete()
+    return redirect('/artists')
 
 
 
